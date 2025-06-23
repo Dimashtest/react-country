@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+body {
+  box-sizing: border-box;
+  background-image: url("/bg.png");
+  background-repeat: no-repeat;
+  background-position: top;
+}
