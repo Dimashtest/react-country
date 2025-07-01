@@ -1,47 +1,102 @@
-// components/CountryPage.jsx (это ваш компонент CountryDetail)
 import { useEffect, useState } from 'react';
-import countryData from '../data/countries.json'; // Убедитесь, что путь правильный
 import { useParams, Link } from 'react-router-dom';
+import countryData from '../data/countries.json';
 
 export function CountryPage() {
     const { countryId } = useParams();
     const [country, setCountry] = useState(null);
 
     useEffect(() => {
-        const foundCountry = countryData.find(c => c.id === countryId);
-        setCountry(foundCountry);
+        if (countryData && countryData[0] && countryData[0].countries) {
+            const foundCountry = countryData[0].countries[parseInt(countryId)];
+            setCountry(foundCountry);
+        }
     }, [countryId]);
 
     return (
-        <div className="p-4 flex flex-col items-center">
+        <div className="p-4 flex flex-col items-center text-white">
+            <div className="absolute flex justify-center items-center top-4 ">
+                {/* Проверьте, что эти файлы существуют в папке public */}
+                <img src="/logo-sm-white.png" alt="Paris Logo" />
+            </div>
+            {/* Кнопка "Назад" для возврата на главную страницу */}
             <Link
-                to={`/countries`} // Возвращаемся к списку стран, а не на главную страницу
-                className="mb-8 p-3 bg-amber-700 rounded-md hover:bg-amber-900 transition-all"
+                to={`/countries`}
+                className="absolute top-4 left-4 p-2"
             >
-                Назад к списку стран
+                <img src="/ico-prev.svg" alt="prev" />
             </Link>
+            <div className="w-full max-w-md relative">
 
-            {country && (
-                <div className="mt-5 text-center p-6 bg-gray-700 bg-opacity-80 rounded-lg shadow-xl max-w-md w-full">
-                    <h2 className="text-3xl font-bold mb-4">{country.name}</h2>
-                    {country.flag && (
-                        <img
-                            src={country.flag}
-                            alt={`${country.name} flag`}
-                            className="w-24 h-auto mx-auto mb-4 rounded-sm border border-gray-300"
-                        />
-                    )}
-                    <p className="text-lg mb-2"><span className="font-semibold">Столица:</span> {country.capital}</p>
-                    <p className="text-lg mb-2"><span className="font-semibold">Население:</span> {country.population}</p>
-                    <p className="text-lg mb-4"><span className="font-semibold">Язык:</span> {country.language}</p>
-                    <p className="text-base leading-relaxed">{country.description}</p>
-                </div>
-            )}
-            {!country && (
-                <div className="mt-5 text-center text-red-500">
-                    <p>Страна не найдена.</p>
-                </div>
-            )}
+                {/* Название страны */}
+                {country && (
+                    <>
+                        <h2 className="text-3xl font-bold text-center mb-3">
+                            {country.name}
+                        </h2>
+
+                        {/* Флаг */}
+                        {country.flag && (
+                            <div className="flex justify-center mb-6">
+                                <img
+                                    src={`/${country.flag}`} // путь к флагу
+                                    alt={`${country.name} flag`}
+                                    className="w-40 h-40 object-cover rounded-full shadow-lg"
+                                />
+                            </div>
+                        )}
+
+                        {/* Медали */}
+                        <div className="grid grid-cols-4 text-center text-sm font-semibold mb-6 border-t border-b py-4 border-white">
+                            <div>
+                                <p className="text-yellow-400">GOLD</p>
+                                <p>{country.medals.gold}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-300">SILVER</p>
+                                <p>{country.medals.silver}</p>
+                            </div>
+                            <div>
+                                <p className="text-orange-500">BRONZE</p>
+                                <p>{country.medals.bronze}</p>
+                            </div>
+                            <div>
+                                <p className="text-white">TOTAL</p>
+                                <p>
+                                    {country.medals.gold +
+                                        country.medals.silver +
+                                        country.medals.bronze}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Кнопки медалей */}
+                        <div className="flex flex-col gap-3">
+                            <Link to={`/country/${countryId}/medal/gold`} className="flex h-[60px] gap-3 items-center p-4 bg-gray-700 bg-opacity-70 rounded-lg shadow-md w-[300px]
+                       hover:bg-amber-700 hover:scale-105 transition-all duration-300 ease-in-out">
+                                <img src="/gold.png" alt="gold" className="w-6 h-6" />
+                                Gold Medals
+                            </Link>
+                            <Link to={`/country/${countryId}/medal/silver`} className="flex h-[60px] gap-3 items-center p-4 bg-gray-700 bg-opacity-70 rounded-lg shadow-md w-[300px]
+                       hover:bg-amber-700 hover:scale-105 transition-all duration-300 ease-in-out">
+                                <img src="/silver.png" alt="silver" className="w-6 h-6" />
+                                Silver Medals
+                            </Link>
+                            <Link to={`/country/${countryId}/medal/bronze`} className="flex h-[60px] gap-3 items-center p-4 bg-gray-700 bg-opacity-70 rounded-lg shadow-md w-[300px]
+                       hover:bg-amber-700 hover:scale-105 transition-all duration-300 ease-in-out">
+                                <img src="/bronze.png" alt="bronze" className="w-6 h-6" />
+                                Bronze Medals
+                            </Link>
+                        </div>
+                    </>
+                )}
+
+                {!country && (
+                    <div className="text-red-500 mt-10 text-center">
+                        Страна не найдена.
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

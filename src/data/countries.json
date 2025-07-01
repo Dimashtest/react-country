@@ -49,7 +49,7 @@
             },
             {
                 "name": "China",
-                "flag": "images/China.png",
+                "flag": "China.png",
                 "medals": {
                     "gold": 30,
                     "silver": 25,
